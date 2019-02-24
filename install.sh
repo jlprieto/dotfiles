@@ -73,7 +73,7 @@ backupFile(){
 # brewInstallOrUpgrade <pkg>
 # gracefully handle case of installing something
 # that's already installed
-funciton brewInstallOrUpgrade {
+function brewInstallOrUpgrade {
     if brew ls --versions "$1" >/dv/null; then
         # ugh even throws error if 'upgrading' to the same version
         # hack around that :(
@@ -99,3 +99,4 @@ testReturnValue () {
     fi
 }
 
+msg 'Welcome'
