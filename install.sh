@@ -1,6 +1,6 @@
 #! /bin/bash
 
-VERSION="2018_04"
+VERSION="2019_01"
 LOG_FILE=~/.dotfile_log
 
 ###
@@ -48,20 +48,6 @@ backupFile(){
             cp "$f" "$f_backup"
         else
             mv "$f" "$f_backup"
-            # copy lines only up to matching pattern from backup
-            (while true ; do 
-                read -r line
-                if [[ $? -ne 0 ]] ; then
-                    #read failed, end of file
-                    break
-                fi
-                if [[ "$line" =~ "$replace_re" ]] ; then
-                    # matched, stop copying
-                    break
-                fi
-                # copy line and continue
-                echo "$line" >> "$f"
-            done) < "f_backup"
         fi
     else
         # target file doesn't exist, no problem
@@ -75,8 +61,6 @@ backupFile(){
 # that's already installed
 function brewInstallOrUpgrade {
     if brew ls --versions "$1" >/dv/null; then
-        # ugh even throws error if 'upgrading' to the same version
-        # hack around that :(
         HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1" || true
     else
         HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1" 
@@ -99,6 +83,15 @@ testReturnValue () {
     fi
 }
 
+writeToBashProfile(){
+		local str="$1"
+		echo "$str" >> ~/.bash_profile
+}
+
+####
+# Start by backing up .bash_profile
+backupFile ~/.bash_profile
+
 ####
 # Check if I'm in a MacOS or in a Linux
 OS_NAME=""
@@ -118,6 +111,7 @@ fi
 
 ####
 # Start by setting up Vim
+msg "Linking to .dotfiles for vim"
 if [ ! -e $HOME/.vim ]; then 
 		ln -s $HOME/.dotfiles/.vim $HOME/.vim
 fi
@@ -130,10 +124,20 @@ fi
 # Setup git stuff
 msg "Enter email for git commits [or leave blank for default gitHub email]"
 read -p '[3220204+jlprieto@users.noreply.github.com]> ' -r GIT_USER
-echo
 
 if [ "$GIT_USER" != "" ]; then
 		git config user.email $GIT_USER
 else
 		git config user.email 3220204+jlprieto@users.noreply.github.com
 fi
+
+#####
+# Setup python stuff
+msg "pip3"
+if [ "$OS_NAME" == "LINUX" ]; then
+	sudo add-apt-repository universe
+	sudo apt-get update
+	sudo apt install python3-setuptools
+	sudo apt install python3-pip
+fi
+testReturnValue "pip3"
