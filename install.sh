@@ -99,4 +99,12 @@ testReturnValue () {
     fi
 }
 
-msg 'Welcome'
+####
+# Check if I'm in a MacOS or in a Linux
+OS_NAME=""
+case "$OSTYPE" in
+  darwin*)  OS_NAME="OSX" ;;
+  linux*)   OS_NAME="LINUX" ;;
+  *)        echo "unknown: $OSTYPE" ;;
+esac
+echo $OS_NAME

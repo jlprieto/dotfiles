@@ -51,7 +51,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(osx pip python)
+plugins=(osx git pip python)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -88,5 +88,5 @@ export WORKON_HOME=~/.venv
 export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
 source /usr/local/bin/virtualenvwrapper.sh
-export PYTHONPATH=/usr/local/Cellar/opencv/2.4.10/lib/python2.7/site-packages/:$PYTHONPATH
+export PYTHONPATH=/Users/xavi/workspace/python_fitbit:/Users/xavi/workspace:/usr/local/Cellar/opencv/2.4.10/lib/python2.7/site-packages/:$PYTHONPATH
 
