@@ -107,4 +107,15 @@ case "$OSTYPE" in
   linux*)   OS_NAME="LINUX" ;;
   *)        echo "unknown: $OSTYPE" ;;
 esac
-echo $OS_NAME
+msg "Looks like we're setting up a $OS_NAME"
+
+####
+# Check that we actually cloned .dotfiles 
+if [ ! -d $HOME/.dotfiles ]; then
+		msg "There is NO .dotfiles folder. Clone .dotfiles from https://github.com/jlprieto/dotfiles.git"
+		exit 1
+fi
+
+####
+# Start by setting up Vim
+
