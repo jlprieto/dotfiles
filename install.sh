@@ -118,4 +118,22 @@ fi
 
 ####
 # Start by setting up Vim
+if [ ! -e $HOME/.vim ]; then 
+		ln -s $HOME/.dotfiles/.vim $HOME/.vim
+fi
 
+if [ ! -e $HOME/.vimrc ]; then
+		ln -s $HOME/.dotfiles/.vim/.vimrc $HOME/.vimrc
+fi
+
+####
+# Setup git stuff
+msg "Enter email for git commits [or leave blank for default gitHub email]"
+read -p '[3220204+jlprieto@users.noreply.github.com]> ' -r GIT_USER
+echo
+
+if [ "$GIT_USER" != "" ]; then
+		git config user.email $GIT_USER
+else
+		git config user.email 3220204+jlprieto@users.noreply.github.com
+fi
