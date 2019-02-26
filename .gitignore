@@ -1,0 +1,64 @@
+# .gitignore
+
+*.conf
+
+##########
+# Mac
+#########
+# Mac crap
+.DS_Store
+
+#########
+# Windows
+#########
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+#########
+# Python
+########
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+*.pyc
+*.pot
+*.log
+dist
+#build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+.pytest_cache
+
+# Translations
+*.mo
+
+# PyCharm
+.idea/
+
+# sublime
+*.sublime*
+
+# ipython notebook
+.ipynb_checkpoints
+
+#########
+# Vim
+#########
+.vim/bundle/
