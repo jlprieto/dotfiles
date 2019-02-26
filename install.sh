@@ -30,36 +30,20 @@ confirm() {
 }
 
 ###
-# backupFile <file> [<replace_re>]
+# backupFile <file> 
 # make a backup copy of a file we're going to modify.
-#
-# optionally strip all lines after the first line
-# containing regexp replace_re, if specified
 backupFile(){
     local f="$1"
     local f_backup="${f}.backup"
-    local replace_re="$2"
-    local line
 
+	if [[ -e "$f_backup" ]] ; then
+		# a backup already exists
+		break
+	fi
     if [[ -e "$f" ]] ; then
         # target file exists, back it up
         log "backing up $f to $f_backup"
-        if [[ -z "$replace_re" ]] ; then
-            cp "$f" "$f_backup"
-        else
-            mv "$f" "$f_backup"
-			# copy lines until pattern from backup
-			(while true ; do
-				read -r line
-				if [[ $? -ne 0 ]] ; then
-					break
-				fi
-				if [[ "$line" =~ "$replace_re" ]] ; then
-					break
-				fi
-					echo "$line" >> "$f"
-			done) < "$f_backup"
-        fi
+		cp "$f" "$f_backup"
     else
         # target file doesn't exist, no problem
         log "$f not found, not creating backup"
@@ -106,8 +90,8 @@ msg "I'm going to start setting up this machine."
 ####
 # Start by backing up .bash_profile
 msg "Let's start by backing the original .bash_profile"
-backupFile ~/.bash_profile JLP_CONFIG
-backupFile ~/.bashrc JLP_CONFIG
+backupFile ~/.bash_profile 
+backupFile ~/.bashrc 
 
 ####
 # Check if I'm in a MacOS or in a Linux
