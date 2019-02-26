@@ -1,6 +1,7 @@
 # .gitignore
 
 *.conf
+.venv
 
 ##########
 # Mac
