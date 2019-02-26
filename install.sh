@@ -160,3 +160,17 @@ if [ "$OS_NAME" == "LINUX" ]; then
 	sudo apt install python3-pip
 fi
 testReturnValue "pip3"
+
+msg "virtualenvwrapper"
+pip3 install virtualenvwrapper
+testReturnValue "virtualenvwrapper"
+
+msg "path_to_virtualenvwrapper"
+if [ "$OS_NAME" == "LINUX" ]; then
+	writeToBashProfile "export WORKON_HOME=$HOME/.venvs" &&
+	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" &&
+	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv" &&
+	writeToBashProfile "source $HOME/.local/bin/virtualenvwrapper.sh" &&
+	source ~/.bash_profile
+fi
+testReturnValue "path_to_virtualenvwrapper"
