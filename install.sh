@@ -43,11 +43,22 @@ backupFile(){
 
     if [[ -e "$f" ]] ; then
         # target file exists, back it up
-        log "backing up $f ot $f_backup"
+        log "backing up $f to $f_backup"
         if [[ -z "$replace_re" ]] ; then
             cp "$f" "$f_backup"
         else
             mv "$f" "$f_backup"
+			# copy lines until pattern from backup
+			(while true ; do
+				read -r line
+				if [[ $? -ne 0 ]] ; then
+					break
+				fi
+				if [[ "$line" =~ "$replace_re" ]] ; then
+					break
+				fi
+					echo "$line" >> "$f"
+			done) < "$f_backup"
         fi
     else
         # target file doesn't exist, no problem
@@ -88,9 +99,15 @@ writeToBashProfile(){
 		echo "$str" >> ~/.bash_profile
 }
 
+############
+# ALL SETUP STARTS HERE
+
+msg "I'm going to start setting up this machine."
 ####
 # Start by backing up .bash_profile
-backupFile ~/.bash_profile
+msg "Let's start by backing the original .bash_profile"
+backupFile ~/.bash_profile JLP_CONFIG
+backupFile ~/.bashrc JLP_CONFIG
 
 ####
 # Check if I'm in a MacOS or in a Linux
@@ -107,6 +124,8 @@ msg "Looks like we're setting up a $OS_NAME"
 if [ ! -d $HOME/.dotfiles ]; then
 		msg "There is NO .dotfiles folder. Clone .dotfiles from https://github.com/jlprieto/dotfiles.git"
 		exit 1
+else
+		msg "The .dotfiles folder seems to be in place. Let's get started"
 fi
 
 ####
