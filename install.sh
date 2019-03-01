@@ -86,10 +86,12 @@ writeToBashProfile(){
 ############
 # ALL SETUP STARTS HERE
 
-msg "I'm going to start setting up this machine."
+rm -f "$LOG_FILE"
+log "I'm going to start setting up this machine."
+
 ####
 # Start by backing up .bash_profile
-msg "Let's start by backing the original .bash_profile"
+msg "Let's start by backing the original .bash_profile and .bash_rc"
 backupFile ~/.bash_profile 
 backupFile ~/.bashrc 
 
@@ -136,6 +138,11 @@ fi
 
 #####
 # Setup python stuff
+if [[ -n "$VIRTUAL_ENV" ]]; then
+	msg "You're on a virtual environment. Make sure you deactivate it before continuing"
+	exit 1
+fi
+
 msg "pip3"
 if [ "$OS_NAME" == "LINUX" ]; then
 	sudo add-apt-repository universe
