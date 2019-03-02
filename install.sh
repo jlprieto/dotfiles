@@ -38,12 +38,12 @@ backupFile(){
 
 	if [[ -e "$f_backup" ]] ; then
 		# a backup already exists
-		break
+		exit	
 	fi
     if [[ -e "$f" ]] ; then
         # target file exists, back it up
         log "backing up $f to $f_backup"
-		cp "$f" "$f_backup"
+		mv "$f" "$f_backup"
     else
         # target file doesn't exist, no problem
         log "$f not found, not creating backup"
@@ -119,8 +119,9 @@ if [[ $? -ne 0 ]]; then
 	fi
 	if [[ "$OS_NAME" == "LINUX" ]]; then
 		msg "zsh"
-		apt-get install zsh
+		sudo apt-get install zsh
 		testReturnValue "zsh"
+		sudo chsh -s $(which zsh)
 	fi
 fi
 
