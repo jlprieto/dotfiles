@@ -128,7 +128,7 @@ if [[ $? -ne 0 ]]; then
 		sudo apt-get update
 		sudo apt-get install zsh
 		testReturnValue "zsh"
-		sudo chsh -s $(which zsh)
+		sudo chsh -s $(which zsh) $USER
 	fi
 fi
 
@@ -231,7 +231,7 @@ pip3 install virtualenvwrapper
 testReturnValue "virtualenvwrapper"
 
 msg "path_to_virtualenvwrapper"
-writeToEnvProfile "export WORKON_HOME=$HOME/.venvs" 
+writeToEnvProfile "export WORKON_HOME=$HOME/.venv" 
 if [ "$OS_NAME" == "LINUX" ]; then
 	writeToEnvProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" 
 	writeToEnvProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
