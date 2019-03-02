@@ -38,7 +38,7 @@ backupFile(){
 
 	if [[ -e "$f_backup" ]] ; then
 		# a backup already exists
-		exit	
+		return	
 	fi
     if [[ -e "$f" ]] ; then
         # target file exists, back it up
@@ -55,7 +55,9 @@ backupFile(){
 # gracefully handle case of installing something
 # that's already installed
 function brewInstallOrUpgrade {
-    if brew ls --versions "$1" >/dv/null; then
+	local aux=$(brew ls --versions "$1")
+	echo "${aux}"
+    if [[ ! -z "$aux" ]]; then
         HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1" || true
     else
         HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1" 
@@ -119,6 +121,8 @@ if [[ $? -ne 0 ]]; then
 	fi
 	if [[ "$OS_NAME" == "LINUX" ]]; then
 		msg "zsh"
+		sudo add-apt-repository universe
+		sudo apt-get update
 		sudo apt-get install zsh
 		testReturnValue "zsh"
 		sudo chsh -s $(which zsh)
@@ -178,26 +182,24 @@ if [[ "$OS_NAME" == "OSX" ]]; then
 	fi
 fi
 
-######
-## Setup python stuff
-#if [[ -n "$VIRTUAL_ENV" ]]; then
-#	msg "You're on a virtual environment. Make sure you deactivate it before continuing"
-#	exit 1
-#fi
-#
-#msg "pip3"
-#if [ "$OS_NAME" == "LINUX" ]; then
-#	sudo add-apt-repository universe
-#	sudo apt-get update
-#	sudo apt install python3-setuptools
-#	sudo apt install python3-pip
-#fi
-#testReturnValue "pip3"
+#####
+# Setup python stuff
+if [[ -n "$VIRTUAL_ENV" ]]; then
+	msg "You're on a virtual environment. Make sure you deactivate it before continuing"
+	exit 1
+fi
 
-#if [[ "$OS_NAME" == "OSX" ]]; then
-#	msg "Homebrew Python3"
-#	brewInstallOrUpgrade python
-#	testReturnValue "Homebrew Python3"
+msg "pip3"
+if [ "$OS_NAME" == "LINUX" ]; then
+	sudo apt install python3-setuptools
+	sudo apt install python3-pip
+fi
+testReturnValue "pip3"
+
+if [[ "$OS_NAME" == "OSX" ]]; then
+	msg "Homebrew Python3"
+	brewInstallOrUpgrade python
+	testReturnValue "Homebrew Python3"
 #
 #	msg "Homebrew Python2"
 #	brewInstallOrUpgrade python@2
@@ -219,34 +221,35 @@ fi
 #	msg "hdf5"
 #	brewInstallOrUpgrade hdf5
 #	testReturnValue "hdf5"
-#fi	
-#
-#msg "virtualenvwrapper"
-#pip3 install virtualenvwrapper
-#testReturnValue "virtualenvwrapper"
-#
-#msg "path_to_virtualenvwrapper"
-#writeToBashProfile "export WORKON_HOME=$HOME/.venvs" 
-#if [ "$OS_NAME" == "LINUX" ]; then
-#	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" 
-#	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
-#	writeToBashProfile "source $HOME/.local/bin/virtualenvwrapper.sh"
-#fi
-#if [[ "$OS_NAME" == "OSX" ]]; then
-#	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3"
-#	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
-#	writeToBashProfile "source /usr/local/bin/virtualenvwrapper.sh"
-#fi
-#source $HOME/.bash_profile
-#testReturnValue "path_to_virtualenvwrapper"
-#
-#msg "py3_virtualenv"
-#if [ "$OS_NAME" == "LINUX" ]; then
-#	mkvirtualenv --python=/usr/bin/python3 py3
-#fi
-#if [[ "OS_NAME" == "OSX" ]]; then
-#	mkvirtualenv --python=/usr/local/bin/python py3
-#fi
-#writeToBashProfile "workon py3"
-#source $HOME/.bash_profile
-#testReturnValue "py3_virtualenv"
+fi	
+
+msg "virtualenvwrapper"
+pip3 install virtualenvwrapper
+testReturnValue "virtualenvwrapper"
+
+msg "path_to_virtualenvwrapper"
+writeToEnvProfile "export WORKON_HOME=$HOME/.venvs" 
+if [ "$OS_NAME" == "LINUX" ]; then
+	writeToEnvProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" 
+	writeToEnvProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
+	writeToEnvProfile "source $HOME/.local/bin/virtualenvwrapper.sh"
+fi
+if [[ "$OS_NAME" == "OSX" ]]; then
+	writeToEnvProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3"
+	writeToEnvProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
+	writeToEnvProfile "source /usr/local/bin/virtualenvwrapper.sh"
+fi
+testReturnValue "path_to_virtualenvwrapper"
+
+msg "py3_virtualenv"
+if [ "$OS_NAME" == "LINUX" ]; then
+	mkvirtualenv --python=/usr/bin/python3 py3
+fi
+if [[ "OS_NAME" == "OSX" ]]; then
+	mkvirtualenv --python=/usr/local/bin/python py3
+fi
+writeToEnvProfile "workon py3"
+testReturnValue "py3_virtualenv"
+
+msg "Looks like we're done."
+msg "To make sure all files are properly sourced leave this session and start a new one"
