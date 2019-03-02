@@ -1,7 +1,7 @@
 #! /bin/bash
 
 VERSION="2019_01"
-LOG_FILE=~/.dotfile_log
+LOG_FILE=$HOME/.dotfile_log
 
 ###
 # msg [args]
@@ -9,7 +9,7 @@ LOG_FILE=~/.dotfile_log
 msg() {
     echo -en '\xE2\x9A\xBD'
     echo -en '\033[32m'
-    echo "$@"
+    echo ": $@"
     echo -en '\033[39m'
 }
 
@@ -25,8 +25,8 @@ log() {
 # confirm
 # wait for user to press a key
 confirm() {
-    local dummy
-    read -p '[Return] to continue> ' dummy
+    local aux
+    read -p '[Return] to continue> ' aux
 }
 
 ###
@@ -78,20 +78,21 @@ testReturnValue () {
     fi
 }
 
-writeToBashProfile(){
+writeToEnvProfile(){
 		local str="$1"
-		echo "$str" >> ~/.bash_profile
+		echo "$str" >> $HOME/.zshenv
 }
 
 ############
 # ALL SETUP STARTS HERE
 
-msg "I'm going to start setting up this machine."
-####
-# Start by backing up .bash_profile
-msg "Let's start by backing the original .bash_profile"
-backupFile ~/.bash_profile 
-backupFile ~/.bashrc 
+# Check that we actually cloned .dotfiles 
+if [[ ! -d $HOME/.dotfiles ]]; then
+		msg "There is NO .dotfiles folder. Clone .dotfiles from https://github.com/jlprieto/dotfiles.git"
+		exit 1
+else
+		msg "The .dotfiles folder seems to be in place. Let's get started"
+fi
 
 ####
 # Check if I'm in a MacOS or in a Linux
@@ -101,19 +102,41 @@ case "$OSTYPE" in
   linux*)   OS_NAME="LINUX" ;;
   *)        echo "unknown: $OSTYPE" ;;
 esac
-msg "Looks like we're setting up a $OS_NAME"
+
+rm -f "$LOG_FILE"
+log "I'm going to start setting up this $OS_NAME machine."
 
 ####
-# Check that we actually cloned .dotfiles 
-if [ ! -d $HOME/.dotfiles ]; then
-		msg "There is NO .dotfiles folder. Clone .dotfiles from https://github.com/jlprieto/dotfiles.git"
-		exit 1
-else
-		msg "The .dotfiles folder seems to be in place. Let's get started"
+# Set the shell
+# First install zsh shell
+zsh --version
+if [[ $? -ne 0 ]]; then
+	if [[ "$OS_NAME" == "OSX" ]]; then
+		msg "zsh"
+		brew install zsh zsh-completions
+		testReturnValue "zsh"
+		chsh -s $(which zsh)
+	fi
+	if [[ "$OS_NAME" == "LINUX" ]]; then
+		msg "zsh"
+		apt-get install zsh
+		testReturnValue "zsh"
+	fi
 fi
 
+# Install oh-my-zsh to get all the aliases and other goodies
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+# now it's time to backup any .zshrc or .zshrc_profile files
+msg "Let's backup any old .zshrc files"
+backupFile $HOME/.zshrc
+
+# link .zshrc
+msg "Linking to .dotfiles for zsh"
+ln -s $HOME/.dotfiles/.zshrc $HOME/.zshrc
+
 ####
-# Start by setting up Vim
+# Setup Vim
 msg "Linking to .dotfiles for vim"
 if [ ! -e $HOME/.vim ]; then 
 		ln -s $HOME/.dotfiles/.vim $HOME/.vim
@@ -135,34 +158,95 @@ else
 fi
 
 #####
-# Setup python stuff
-msg "pip3"
-if [ "$OS_NAME" == "LINUX" ]; then
-	sudo add-apt-repository universe
-	sudo apt-get update
-	sudo apt install python3-setuptools
-	sudo apt install python3-pip
-fi
-testReturnValue "pip3"
+# Specific things for MACOS
+#if [[ "$OS_NAME" == "OSX" ]]; then
+#	msg "XCode"
+#	msg "If XCode is already installed there will be an error message that can be savely ignored"
+#	xcode-select --install 
+#	confirm
+#	testReturnValue "XCode"
 
-msg "virtualenvwrapper"
-pip3 install virtualenvwrapper
-testReturnValue "virtualenvwrapper"
+#	if [[ -x /usr/local/bin/brew ]]; then
+#		msg "Homebrew already installed, updating"
+#		brew update
+#	else
+#		msg "Installing Homebrew"
+#		confirm
+#		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
+#		source $HOME/.bash_profile
+#		testReturnValue "Homebrew"
+#	fi
+#fi
+#
+######
+## Setup python stuff
+#if [[ -n "$VIRTUAL_ENV" ]]; then
+#	msg "You're on a virtual environment. Make sure you deactivate it before continuing"
+#	exit 1
+#fi
+#
+#msg "pip3"
+#if [ "$OS_NAME" == "LINUX" ]; then
+#	sudo add-apt-repository universe
+#	sudo apt-get update
+#	sudo apt install python3-setuptools
+#	sudo apt install python3-pip
+#fi
+#testReturnValue "pip3"
 
-msg "path_to_virtualenvwrapper"
-if [ "$OS_NAME" == "LINUX" ]; then
-	writeToBashProfile "export WORKON_HOME=$HOME/.venvs" 
-	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" 
-	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
-	writeToBashProfile "source $HOME/.local/bin/virtualenvwrapper.sh"
-fi
-source $HOME/.bash_profile
-testReturnValue "path_to_virtualenvwrapper"
-
-msg "py3_virtualenv"
-if [ "$OS_NAME" == "LINUX" ]; then
-	mkvirtualenv --python=/usr/bin/python3 py3
-	writeToBashProfile "workon py3"
-fi
-source $HOME/.bash_profile
-testReturnValue "py3_virtualenv"
+#if [[ "$OS_NAME" == "OSX" ]]; then
+#	msg "Homebrew Python3"
+#	brewInstallOrUpgrade python
+#	testReturnValue "Homebrew Python3"
+#
+#	msg "Homebrew Python2"
+#	brewInstallOrUpgrade python@2
+#	testReturnValue "Homebrew Python2"
+#
+#	msg "gcc"
+#	brewInstallOrUpgrade gcc
+#	testReturnValue "gcc"
+#
+#	msg "cmake"
+#	brewInstallOrUpgrade cmake
+#	testReturnValue "cmake"
+#
+#	#needed for matplotlib
+#	msg "freetype"
+#	brewInstallOrUpgrade freetype
+#	testReturnValue "freetype"
+#
+#	msg "hdf5"
+#	brewInstallOrUpgrade hdf5
+#	testReturnValue "hdf5"
+#fi	
+#
+#msg "virtualenvwrapper"
+#pip3 install virtualenvwrapper
+#testReturnValue "virtualenvwrapper"
+#
+#msg "path_to_virtualenvwrapper"
+#writeToBashProfile "export WORKON_HOME=$HOME/.venvs" 
+#if [ "$OS_NAME" == "LINUX" ]; then
+#	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" 
+#	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
+#	writeToBashProfile "source $HOME/.local/bin/virtualenvwrapper.sh"
+#fi
+#if [[ "$OS_NAME" == "OSX" ]]; then
+#	writeToBashProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3"
+#	writeToBashProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
+#	writeToBashProfile "source /usr/local/bin/virtualenvwrapper.sh"
+#fi
+#source $HOME/.bash_profile
+#testReturnValue "path_to_virtualenvwrapper"
+#
+#msg "py3_virtualenv"
+#if [ "$OS_NAME" == "LINUX" ]; then
+#	mkvirtualenv --python=/usr/bin/python3 py3
+#fi
+#if [[ "OS_NAME" == "OSX" ]]; then
+#	mkvirtualenv --python=/usr/local/bin/python py3
+#fi
+#writeToBashProfile "workon py3"
+#source $HOME/.bash_profile
+#testReturnValue "py3_virtualenv"
