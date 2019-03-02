@@ -78,9 +78,9 @@ testReturnValue () {
     fi
 }
 
-writeToLoginProfile(){
+writeToEnvProfile(){
 		local str="$1"
-		echo "$str" >> $HOME/.zlogin
+		echo "$str" >> $HOME/.zshenv
 }
 
 ############
@@ -126,33 +126,36 @@ fi
 
 # Install oh-my-zsh to get all the aliases and other goodies
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 # now it's time to backup any .zshrc or .zshrc_profile files
 msg "Let's backup any old .zshrc files"
 backupFile $HOME/.zshrc
-backupFile $HOME/.zlogin
-writeToLoginProfile "source $HOME/.zshrc"
+
+# link .zshrc
+msg "Linking to .dotfiles for zsh"
+ln -s $HOME/.dotfiles/.zshrc $HOME/.zshrc
 
 ####
-# Start by setting up Vim
-#msg "Linking to .dotfiles for vim"
-#if [ ! -e $HOME/.vim ]; then 
-#		ln -s $HOME/.dotfiles/.vim $HOME/.vim
-#fi
+# Setup Vim
+msg "Linking to .dotfiles for vim"
+if [ ! -e $HOME/.vim ]; then 
+		ln -s $HOME/.dotfiles/.vim $HOME/.vim
+fi
 
-#if [ ! -e $HOME/.vimrc ]; then
-#		ln -s $HOME/.dotfiles/.vim/.vimrc $HOME/.vimrc
-#fi
+if [ ! -e $HOME/.vimrc ]; then
+		ln -s $HOME/.dotfiles/.vim/.vimrc $HOME/.vimrc
+fi
 
 ####
 # Setup git stuff
-#msg "Enter email for git commits [or leave blank for default gitHub email]"
-#read -p '[3220204+jlprieto@users.noreply.github.com]> ' -r GIT_USER
-#
-#if [ "$GIT_USER" != "" ]; then
-#		git config user.email $GIT_USER
-#else
-#		git config user.email 3220204+jlprieto@users.noreply.github.com
-#fi
+msg "Enter email for git commits [or leave blank for default gitHub email]"
+read -p '[3220204+jlprieto@users.noreply.github.com]> ' -r GIT_USER
+
+if [ "$GIT_USER" != "" ]; then
+		git config user.email $GIT_USER
+else
+		git config user.email 3220204+jlprieto@users.noreply.github.com
+fi
 
 #####
 # Specific things for MACOS
