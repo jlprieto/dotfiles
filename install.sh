@@ -160,25 +160,24 @@ fi
 
 #####
 # Specific things for MACOS
-#if [[ "$OS_NAME" == "OSX" ]]; then
-#	msg "XCode"
-#	msg "If XCode is already installed there will be an error message that can be savely ignored"
-#	xcode-select --install 
-#	confirm
-#	testReturnValue "XCode"
+if [[ "$OS_NAME" == "OSX" ]]; then
+	msg "XCode: If XCode is already installed there will be an error message that can be savely ignored"
+	xcode-select --install 
+	confirm
+	testReturnValue "XCode"
 
-#	if [[ -x /usr/local/bin/brew ]]; then
-#		msg "Homebrew already installed, updating"
-#		brew update
-#	else
-#		msg "Installing Homebrew"
-#		confirm
-#		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
-#		source $HOME/.bash_profile
-#		testReturnValue "Homebrew"
-#	fi
-#fi
-#
+	if [[ -x /usr/local/bin/brew ]]; then
+		msg "Homebrew already installed, updating"
+		brew update
+	else
+		msg "Installing Homebrew"
+		confirm
+		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &&
+		source $HOME/.bash_profile
+		testReturnValue "Homebrew"
+	fi
+fi
+
 ######
 ## Setup python stuff
 #if [[ -n "$VIRTUAL_ENV" ]]; then
