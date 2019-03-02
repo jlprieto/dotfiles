@@ -244,15 +244,127 @@ if [[ "$OS_NAME" == "OSX" ]]; then
 fi
 testReturnValue "path_to_virtualenvwrapper"
 
-msg "py3_virtualenv"
+msg "python_virtualenvironments"
 if [ "$OS_NAME" == "LINUX" ]; then
 	mkvirtualenv --python=/usr/bin/python3 py3
+	mkvirtualenv --python=/usr/bin/python2 py2
 fi
 if [[ "OS_NAME" == "OSX" ]]; then
-	mkvirtualenv --python=/usr/local/bin/python py3
+	mkvirtualenv --python=/usr/local/bin/python3 py3
+	mkvirtualenv --python=/usr/local/bin/python py2
 fi
-writeToEnvProfile "workon py3"
-testReturnValue "py3_virtualenv"
+testReturnValue "python_virtualenvironments"
+source $HOME/.zshenv
+
+# py2 packages
+workon py2
+msg "future"
+pip install future
+testReturnValue "future"
+
+msg "ipdb"
+pip install ipdb
+testReturnValue "ipdb"
+
+msg "numpy"
+pip install numpy
+testReturnValue "numpy"
+
+msg "scipy"
+pip install scipy
+testReturnValue "scipy"
+
+msg "matplotlib"
+pip install matplotlib
+testReturnValue "matplotlib"
+
+msg "imageio"
+pip install imageio
+testReturnValue "imageio"
+
+msg "sklearn"
+pip install sklearn
+testReturnValue "sklearn"
+
+msg "pandas"
+pip install pandas
+testReturnValue "pandas"
+
+msg "jupyter"
+pip install jupyter
+testReturnValue "jupyter"
+
+msg "h5py"
+pip install h5py
+testReturnValue "h5py"
+
+msg "pyserial"
+pip install pyserial
+testReturnValue "pyserial"
+
+msg "lxml"
+pip install lxml
+testReturnValue "lxml"
+
+msg "beautifulsoup4"
+pip install beautifulsoup4
+testReturnValue "beautifulsoup4"
+
+# py3 packages
+workon py3
+msg "future"
+pip install future
+testReturnValue "future"
+
+msg "ipdb"
+pip install ipdb
+testReturnValue "ipdb"
+
+msg "numpy"
+pip install numpy
+testReturnValue "numpy"
+
+msg "scipy"
+pip install scipy
+testReturnValue "scipy"
+
+msg "matplotlib"
+pip install matplotlib
+testReturnValue "matplotlib"
+
+msg "imageio"
+pip install imageio
+testReturnValue "imageio"
+
+msg "sklearn"
+pip install sklearn
+testReturnValue "sklearn"
+
+msg "pandas"
+pip install pandas
+testReturnValue "pandas"
+
+msg "jupyter"
+pip install jupyter
+testReturnValue "jupyter"
+
+msg "h5py"
+pip install h5py
+testReturnValue "h5py"
+
+msg "pyserial"
+pip install pyserial
+testReturnValue "pyserial"
+
+msg "lxml"
+pip install lxml
+testReturnValue "lxml"
+
+msg "beautifulsoup4"
+pip install beautifulsoup4
+testReturnValue "beautifulsoup4"
+# Done with setting up python virtualenv's
+deactivate
 
 msg "Looks like we're done."
 msg "To make sure all files are properly sourced leave this session and start a new one"
