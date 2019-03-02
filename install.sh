@@ -107,6 +107,9 @@ esac
 
 rm -f "$LOG_FILE"
 log "I'm going to start setting up this $OS_NAME machine."
+if [[ -e $HOME/.zshenv ]]; then
+	rm -f $HOME/.zshenv
+fi
 
 ####
 # Set the shell
