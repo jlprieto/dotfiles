@@ -239,7 +239,7 @@ if [ "$OS_NAME" == "LINUX" ]; then
 fi
 if [[ "$OS_NAME" == "OSX" ]]; then
 	writeToEnvProfile "export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3"
-	writeToEnvProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv"
+	writeToEnvProfile "export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv"
 	writeToEnvProfile "source /usr/local/bin/virtualenvwrapper.sh"
 fi
 testReturnValue "path_to_virtualenvwrapper"
