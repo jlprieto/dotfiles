@@ -310,6 +310,22 @@ msg "beautifulsoup4"
 pip install beautifulsoup4
 testReturnValue "beautifulsoup4"
 
+msg "flake8"
+pip install flake8
+testReturnValue "flake8"
+
+msg "coverage"
+pip install coverage
+testReturnValue "coverage"
+
+msg "pylint"
+pip install pylint
+testReturnValue "pylint"
+
+msg "flask"
+pip install flask
+testReturnValue "flask"
+
 # py3 packages
 workon py3
 msg "future"
@@ -363,6 +379,23 @@ testReturnValue "lxml"
 msg "beautifulsoup4"
 pip install beautifulsoup4
 testReturnValue "beautifulsoup4"
+
+msg "flake8"
+pip install flake8
+testReturnValue "flake8"
+
+msg "coverage"
+pip install coverage
+testReturnValue "coverage"
+
+msg "pylint"
+pip install pylint
+testReturnValue "pylint"
+
+msg "flask"
+pip install flask
+testReturnValue "flask"
+
 # Done with setting up python virtualenv's
 deactivate
 
