@@ -36,6 +36,9 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Settings for vim-powerline
+set laststatus=2
+
 " Better Python IDE stuff
 " Proper PEP8 indentation
 au BufNewFile,BufRead *.py:
@@ -46,4 +49,9 @@ au BufNewFile,BufRead *.py:
 	\ set expandtab
 	\ set autoindent
 	\ set fileformat=unix
+	\ set nowrap " don't automatically wrap on load
+	\ set fo-=t " don't automatically wrap text when typing
+	\ set colorcolumn=80
+
+highlight ColorColumn ctermbg=233
 :nnoremap <buffer> H :<C-u>execute "!pydoc3 " . expand("<cword>")<CR>	" execute pytdoc3 to see python docstrings
