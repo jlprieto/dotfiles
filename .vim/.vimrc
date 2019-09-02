@@ -38,6 +38,10 @@ nnoremap <C-H> <C-W><C-H>
 
 " Settings for vim-powerline
 set laststatus=2
+set guifont=Inconsolata\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set fillchars+=stl:\ ,stlnc:\
 
 " Better Python IDE stuff
 " Proper PEP8 indentation

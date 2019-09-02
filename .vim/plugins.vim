@@ -9,6 +9,6 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'kien/ctrlp.vim'
-Plugin 'powerline/powerline'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 call vundle#end()
 filetype plugin indent on
