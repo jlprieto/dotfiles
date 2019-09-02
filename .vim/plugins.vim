@@ -7,5 +7,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
+Plugin 'tmhedberg/SimpylFold'
 call vundle#end()
 filetype plugin indent on
