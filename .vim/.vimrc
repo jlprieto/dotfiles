@@ -24,5 +24,8 @@ set mouse=a								" on OSX press ALT and click
 set bs=2								" Make backspace behave normal
 
 
-:imap jk <ESC>
+:imap jk <ESC>							" remap ESC key to jk
 map <C-o> :NERDTreeToggle<CR>
+
+" Better Python IDE stuff
+:nnoremap <buffer> H :<C-u>execute "!pydoc3 " . expand("<cword>")<CR>	" execute pytdoc3 to see python docstrings
