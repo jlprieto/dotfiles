@@ -1,4 +1,5 @@
 so ~/.vim/plugins.vim
+set noerrorbells visualbell t_vb=		" Avoids beeping and visualbells when escaping and other errors
 autocmd! bufwritepost .vimrc source %	" Automatic reloading of .vimrc
 colorscheme badwolf
 let g:badwolf_darkgutter = 1			"Make the gutters darker than the text
