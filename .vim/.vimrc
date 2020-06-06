@@ -27,6 +27,9 @@ set clipboard=unnamed
 set mouse=a								" on OSX press ALT and click
 set bs=2								" Make backspace behave normal
 
+" NERDtree Settings
+let NERDTreeShowHidden=1
+
 
 :imap jk <ESC>							" remap ESC key to jk
 map <C-o> :NERDTreeToggle<CR>
